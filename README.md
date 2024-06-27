@@ -1,14 +1,14 @@
 # Chess-Board-Problems
-// Solving N- Queens, N-Rooks and N-knights Problem
+// Solving N- Queens and N-Rooks Problem
 #include <iostream>
 #include <vector>
 
 using namespace std;
 
-class NQueensNRooksNKnights {
+class NQueensNRooks {
 public:
     // Constructor initializes the board and sets the number of solutions to zero
-    NQueensNRooksNKnights(int n) : N(n), board(n, vector<char>(n, '.')), solutionsQueens(0), solutionsRooks(0), solutionsKnights(0) {}
+    NQueensNRooks(int n) : N(n), board(n, vector<char>(n, '.')), solutionsQueens(0), solutionsRooks(0) {}
 
     // Public method to start solving the N-Queens problem
     void solveQueens() {
@@ -22,17 +22,10 @@ public:
         cout << "Number of solutions for " << N << " rooks: " << solutionsRooks << endl;
     }
 
-    // Public method to start solving the N-Knights problem
-    void solveKnights() {
-        solveNKnights(0, 0, 0);  // Start solving from the first cell for knights
-        cout << "Number of solutions for " << N << " knights: " << solutionsKnights << endl;
-    }
-
 private:
     int N;  // Size of the board (N x N)
     int solutionsQueens;  // Counter for the number of solutions for queens
     int solutionsRooks;  // Counter for the number of solutions for rooks
-    int solutionsKnights;  // Counter for the number of solutions for knights
     vector<vector<char>> board;  // 2D vector representing the chessboard
 
     // Method to check if it's safe to place a queen at board[row][col]
@@ -67,22 +60,6 @@ private:
         }
 
         return true;  // It's safe to place the rook
-    }
-
-    // Method to check if it's safe to place a knight at board[row][col]
-    bool isSafeKnight(int row, int col) {
-        // Possible knight moves
-        int knightMoves[8][2] = {{-2, -1}, {-1, -2}, {1, -2}, {2, -1}, {2, 1}, {1, 2}, {-1, 2}, {-2, 1}};
-
-        for (auto move : knightMoves) {
-            int newRow = row + move[0];
-            int newCol = col + move[1];
-            if (newRow >= 0 && newRow < N && newCol >= 0 && newCol < N && board[newRow][newCol] == 'K') {
-                return false;
-            }
-        }
-
-        return true;  // It's safe to place the knight
     }
 
     // Recursive method to solve the N-Queens problem
@@ -121,43 +98,12 @@ private:
         }
     }
 
-    // Recursive method to solve the N-Knights problem
-    void solveNKnights(int row, int col, int count) {
-        if (count == N) {  // All knights are placed successfully
-            solutionsKnights++;
-            printSolution("K");
-            return;
-        }
-
-        if (row >= N) return;  // Exceeding the board
-
-        // Try placing the knight in the current cell
-        if (isSafeKnight(row, col)) {
-            board[row][col] = 'K';  // Place the knight
-            if (col + 1 < N) {
-                solveNKnights(row, col + 1, count + 1);  // Move to the next cell in the same row
-            } else {
-                solveNKnights(row + 1, 0, count + 1);  // Move to the first cell of the next row
-            }
-            board[row][col] = '.';  // Backtrack and remove the knight
-        }
-
-        // Move to the next cell without placing a knight
-        if (col + 1 < N) {
-            solveNKnights(row, col + 1, count);  // Move to the next cell in the same row
-        } else {
-            solveNKnights(row + 1, 0, count);  // Move to the first cell of the next row
-        }
-    }
-
     // Method to print the current solution in a bordered grid format
     void printSolution(const string& piece) {
         if (piece == "Q") {
             cout << "Solution for Queens #" << solutionsQueens << ":" << endl;
-        } else if (piece == "R") {
+        } else {
             cout << "Solution for Rooks #" << solutionsRooks << ":" << endl;
-        } else if (piece == "K") {
-            cout << "Solution for Knights #" << solutionsKnights << ":" << endl;
         }
         // Print top border
         for (int i = 0; i < N; ++i) {
@@ -186,15 +132,12 @@ int main() {
     cout << "Enter the value of N: ";
     cin >> n;
 
-    NQueensNRooksNKnights solver(n);  // Create an instance of NQueensNRooksNKnights with the given size
+    NQueensNRooks solver(n);  // Create an instance of NQueensNRooks with the given size
     cout << "Solving N-Queens problem..." << endl;
     solver.solveQueens();  // Solve the N-Queens problem
 
     cout << "Solving N-Rooks problem..." << endl;
     solver.solveRooks();  // Solve the N-Rooks problem
-
-    cout << "Solving N-Knights problem..." << endl;
-    solver.solveKnights();  // Solve the N-Knights problem
 
     return 0;
 }
